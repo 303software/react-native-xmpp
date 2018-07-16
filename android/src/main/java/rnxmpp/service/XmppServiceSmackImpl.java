@@ -86,7 +86,7 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
 
 //        logger.log(Level.WARNING, "Sending request via MamManager for " + max + " records for user " + user);
 
-        if(user.equals(null) && !user.isEmpty()) {
+        if(!user.equals(null) && !user.isEmpty()) {
 
             FormField formField = new FormField("with");
             formField.addValue(user);

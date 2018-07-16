@@ -5,6 +5,7 @@ var RNXMPP = NativeModules.RNXMPP;
 
 var map = {
     'message' : 'RNXMPPMessage',
+    'archiveMessage': 'RNXMPPArchivedMessage',
     'iq': 'RNXMPPIQ',
     'presence': 'RNXMPPPresence',
     'connect': 'RNXMPPConnect',
@@ -101,7 +102,7 @@ class XMPP {
             NativeAppEventEmitter.addListener(map.loginError, this.onLoginError.bind(this)),
             NativeAppEventEmitter.addListener(map.login, this.onLogin.bind(this)),
         ];
-        
+
         LOG('All event listeners removed');
     }
 
@@ -117,8 +118,17 @@ class XMPP {
     }
 
     message(text, user, thread = null){
-        LOG(`Message: "${text}" being sent to user: ${user}`);
         React.NativeModules.RNXMPP.message(text, user, thread);
+    }
+
+    fetchMessageArchive(max, user){
+        if (!max) {
+            max = 0;
+        }
+        if (!user) {
+            user = "";
+        }
+        React.NativeModules.RNXMPP.fetchMessageArchive(max, user);
     }
 
     sendStanza(stanza){
