@@ -95,7 +95,7 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
 
         // Lets set a default
         Integer maxLookup = 200;
-        if (max == 0) {
+        if (max != 0) {
             maxLookup = max;
         }
 
