@@ -5,6 +5,9 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
 
+import org.jivesoftware.smack.SmackException;
+import org.jxmpp.stringprep.XmppStringprepException;
+
 import java.util.logging.Logger;
 
 import rnxmpp.service.RNXMPPCommunicationBridge;
@@ -38,25 +41,26 @@ public class RNXMPPModule extends ReactContextBaseJavaModule implements rnxmpp.s
 
     @Override
     @ReactMethod
-    public void connect(String jid, String password, String authMethod, String hostname, Integer port){
+    public void connect(String jid, String password, String authMethod, String hostname, Integer port) throws XmppStringprepException {
+
         this.xmppService.connect(jid, password, authMethod, hostname, port);
     }
 
     @Override
     @ReactMethod
-    public void message(String text, String to, String thread){
+    public void message(String text, String to, String thread) throws XmppStringprepException, SmackException.NotConnectedException, InterruptedException {
         this.xmppService.message(text, to, thread);
     }
 
     @Override
     @ReactMethod
-    public void presence(String to, String type) {
+    public void presence(String to, String type) throws SmackException.NotConnectedException, InterruptedException {
         this.xmppService.presence(to, type);
     }
 
     @Override
     @ReactMethod
-    public void removeRoster(String to) {
+    public void removeRoster(String to) throws XmppStringprepException {
         this.xmppService.removeRoster(to);
     }
 
@@ -71,6 +75,10 @@ public class RNXMPPModule extends ReactContextBaseJavaModule implements rnxmpp.s
     public void fetchRoster() {
         this.xmppService.fetchRoster();
     }
+
+    @Override
+    @ReactMethod
+    public void fetchMessageArchive() { this.xmppService.fetchMessageArchive(); }
 
     @Override
     @ReactMethod
