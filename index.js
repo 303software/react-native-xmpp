@@ -121,7 +121,7 @@ class XMPP {
         React.NativeModules.RNXMPP.message(text, user, thread);
     }
 
-    fetchMessageArchive(max, user){
+    fetchMessageArchive(max = 0, user = ""){
         if (!max) {
             max = 0;
         }
