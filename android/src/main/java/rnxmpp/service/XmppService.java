@@ -36,7 +36,7 @@ public interface XmppService {
     void fetchRoster();
 
     @ReactMethod
-    void fetchMessageArchive() throws XMPPException.XMPPErrorException, SmackException.NotLoggedInException, SmackException.NotConnectedException, InterruptedException, SmackException.NoResponseException, XmppStringprepException;
+    void fetchMessageArchive(Integer max, String user) throws XMPPException.XMPPErrorException, SmackException.NotLoggedInException, SmackException.NotConnectedException, InterruptedException, SmackException.NoResponseException, XmppStringprepException;
 
     @ReactMethod
     void sendStanza(String stanza);

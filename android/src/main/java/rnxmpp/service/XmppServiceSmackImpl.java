@@ -74,7 +74,7 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
     }
 
     @Override
-    public void fetchMessageArchive() {
+    public void fetchMessageArchive(Integer max, String user) {
 
         MamManager mamManager = MamManager.getInstanceFor(connection);
 
@@ -84,12 +84,27 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
         field.addValue(MamElements.NAMESPACE);
         form.addField(field);
 
+//        logger.log(Level.WARNING, "Sending request via MamManager for " + max + " records for user " + user);
+
+        if(user.equals(null) && !user.isEmpty()) {
+
+            FormField formField = new FormField("with");
+            formField.addValue(user);
+            form.addField(formField);
+        }
+
+        // Lets set a default
+        Integer maxLookup = 200;
+        if (max == 0) {
+            maxLookup = max;
+        }
+
         // "" empty string for before
-        RSMSet rsmSet = new RSMSet(200, "", RSMSet.PageDirection.before);
+        RSMSet rsmSet = new RSMSet(maxLookup, "", RSMSet.PageDirection.before);
         MamManager.MamQueryResult mamQueryResult = null;
         try {
             mamQueryResult = mamManager.page(form, rsmSet);
-        } catch (SmackException.NoResponseException  | XMPPException.XMPPErrorException | SmackException.NotConnectedException | InterruptedException | SmackException.NotLoggedInException e) {
+        } catch (SmackException.NoResponseException | XMPPException.XMPPErrorException | SmackException.NotConnectedException | InterruptedException | SmackException.NotLoggedInException e) {
             logger.log(Level.WARNING, "Could not send MamQuery: " + e);
             return;
         }

@@ -78,7 +78,7 @@ public class RNXMPPModule extends ReactContextBaseJavaModule implements rnxmpp.s
 
     @Override
     @ReactMethod
-    public void fetchMessageArchive() { this.xmppService.fetchMessageArchive(); }
+    public void fetchMessageArchive(Integer max, String user) { this.xmppService.fetchMessageArchive(max, user); }
 
     @Override
     @ReactMethod
