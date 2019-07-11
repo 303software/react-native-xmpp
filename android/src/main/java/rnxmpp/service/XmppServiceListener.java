@@ -4,6 +4,7 @@ import org.jivesoftware.smack.packet.IQ;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.roster.Roster;
+import org.jxmpp.stringprep.XmppStringprepException;
 
 /**
  * Created by Kristian Frølund on 7/19/16.
@@ -17,7 +18,8 @@ public interface XmppServiceListener {
     void onMessage(Message message);
     void onRosterReceived(Roster roster);
     void onIQ(IQ iq);
-    void onPresence(Presence presence);
+    void onArchiveMessage(String message);
+    void onPresence(Presence presence) throws XmppStringprepException;
     void onConnnect(String username, String password);
     void onDisconnect(Exception e);
     void onLogin(String username, String password);
