@@ -87,11 +87,13 @@ public class RNXMPPModule extends ReactContextBaseJavaModule implements rnxmpp.s
     }
 
     @Override
+    @ReactMethod
     public void setRosterSubscriptionMode(String subscriptionMode) {
         this.xmppService.setRosterSubscriptionMode(subscriptionMode);
     }
 
     @Override
+    @ReactMethod
     public String createRosterEntry(String to) {
         return this.xmppService.createRosterEntry(to);
     }
