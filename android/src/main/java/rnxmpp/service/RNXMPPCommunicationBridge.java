@@ -14,6 +14,7 @@ import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterEntry;
 import org.jivesoftware.smack.roster.RosterGroup;
+import org.jxmpp.stringprep.XmppStringprepException;
 
 import rnxmpp.utils.Parser;
 
@@ -24,15 +25,16 @@ import rnxmpp.utils.Parser;
 
 public class RNXMPPCommunicationBridge implements XmppServiceListener {
 
-    public static final String RNXMPP_ERROR =       "RNXMPPError";
-    public static final String RNXMPP_LOGIN_ERROR = "RNXMPPLoginError";
-    public static final String RNXMPP_MESSAGE =     "RNXMPPMessage";
-    public static final String RNXMPP_ROSTER =      "RNXMPPRoster";
-    public static final String RNXMPP_IQ =          "RNXMPPIQ";
-    public static final String RNXMPP_PRESENCE =    "RNXMPPPresence";
-    public static final String RNXMPP_CONNECT =     "RNXMPPConnect";
-    public static final String RNXMPP_DISCONNECT =  "RNXMPPDisconnect";
-    public static final String RNXMPP_LOGIN =       "RNXMPPLogin";
+    public static final String RNXMPP_ERROR =            "RNXMPPError";
+    public static final String RNXMPP_LOGIN_ERROR =      "RNXMPPLoginError";
+    public static final String RNXMPP_MESSAGE =          "RNXMPPMessage";
+    public static final String RNXMPP_ARCHIVED_MESSAGE = "RNXMPPArchivedMessage";
+    public static final String RNXMPP_ROSTER =           "RNXMPPRoster";
+    public static final String RNXMPP_IQ =               "RNXMPPIQ";
+    public static final String RNXMPP_PRESENCE =         "RNXMPPPresence";
+    public static final String RNXMPP_CONNECT =          "RNXMPPConnect";
+    public static final String RNXMPP_DISCONNECT =       "RNXMPPDisconnect";
+    public static final String RNXMPP_LOGIN =            "RNXMPPLogin";
     ReactContext reactContext;
 
     public RNXMPPCommunicationBridge(ReactContext reactContext) {
@@ -60,7 +62,7 @@ public class RNXMPPCommunicationBridge implements XmppServiceListener {
         params.putString("thread", message.getThread());
         params.putString("subject", message.getSubject());
         params.putString("body", message.getBody());
-        params.putString("from", message.getFrom());
+        params.putString("from", message.getFrom().toString());
         params.putString("src", message.toXML().toString());
         sendEvent(reactContext, RNXMPP_MESSAGE, params);
     }
@@ -85,14 +87,20 @@ public class RNXMPPCommunicationBridge implements XmppServiceListener {
 
     @Override
     public void onIQ(IQ iq) {
+
         sendEvent(reactContext, RNXMPP_IQ, Parser.parse(iq.toString()));
     }
 
+    public void onArchiveMessage(String message) {
+
+        sendEvent(reactContext, RNXMPP_ARCHIVED_MESSAGE, Parser.parse(message));
+    }
+
     @Override
-    public void onPresence(Presence presence) {
+    public void onPresence(Presence presence) throws XmppStringprepException {
         WritableMap presenceMap = Arguments.createMap();
         presenceMap.putString("type", presence.getType().toString());
-        presenceMap.putString("from", presence.getFrom());
+        presenceMap.putString("from", presence.getFrom().toString());
         presenceMap.putString("status", presence.getStatus());
         presenceMap.putString("mode", presence.getMode().toString());
         sendEvent(reactContext, RNXMPP_PRESENCE, presenceMap);
