@@ -355,7 +355,7 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
     public void createEntry(String to) {
         Roster roster = Roster.getInstanceFor(connection);
         try {
-            roster.createEntry(to,"",null);
+            roster.createEntry(JidCreate.bareFrom(to),"",null);
         } catch (SmackException.NotLoggedInException e) {
             e.printStackTrace();
         } catch (SmackException.NoResponseException e) {
