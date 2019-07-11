@@ -364,6 +364,10 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
             e.printStackTrace();
         } catch (SmackException.NotConnectedException e) {
             e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (XmppStringprepException e) {
+            e.printStackTrace();
         }
     }
 }
