@@ -362,4 +362,20 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
         }
         return null;
     }
+
+    @Override
+    public String removeRosterEntry(String jid) {
+        Roster roster = Roster.getInstanceFor(connection);
+        try {
+            RosterEntry entry = roster.getEntry(JidCreate.bareFrom(jid));
+            if (entry == null) {
+                return "ENTRY NOT FOUND!";
+            }
+            roster.removeEntry(entry);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return e.getMessage();
+        }
+        return null;
+    }
 }

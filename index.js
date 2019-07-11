@@ -141,12 +141,12 @@ class XMPP {
         RNXMPP.createRosterEntry(to)
     }
 
-    presence(to, type){
-        React.NativeModules.RNXMPP.presence(to, type);
+    removeRosterEntry(jid){
+        RNXMPP.removeRosterEntry(jid);
     }
 
-    removeFromRoster(to){
-        React.NativeModules.RNXMPP.removeRoster(to);
+    presence(to, type){
+        React.NativeModules.RNXMPP.presence(to, type);
     }
 
     disconnect(){

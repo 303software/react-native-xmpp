@@ -45,4 +45,7 @@ public interface XmppService {
 
     @ReactMethod
     String createRosterEntry(String to);
+
+    @ReactMethod
+    String removeRosterEntry(String jid);
 }

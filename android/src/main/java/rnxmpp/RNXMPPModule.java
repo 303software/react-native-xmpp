@@ -97,4 +97,10 @@ public class RNXMPPModule extends ReactContextBaseJavaModule implements rnxmpp.s
     public String createRosterEntry(String to) {
         return this.xmppService.createRosterEntry(to);
     }
+
+    @Override
+    @ReactMethod
+    public String removeRosterEntry(String jid) {
+        return this.xmppService.removeRosterEntry(jid);
+    }
 }
