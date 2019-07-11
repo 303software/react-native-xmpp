@@ -77,4 +77,14 @@ public class RNXMPPModule extends ReactContextBaseJavaModule implements rnxmpp.s
     public void sendStanza(String stanza) {
         this.xmppService.sendStanza(stanza);
     }
+
+    @Override
+    public void setRosterSubscriptionMode(String subscriptionMode) {
+        this.xmppService.setRosterSubscriptionMode(subscriptionMode);
+    }
+
+    @Override
+    public void createEntry(String to) {
+        this.xmppService.createEntry(to);
+    }
 }

@@ -3,6 +3,8 @@ package rnxmpp.service;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
 
+import org.jivesoftware.smack.roster.Roster;
+
 /**
  * Created by Kristian Frølund on 7/19/16.
  * Copyright (c) 2016. Teletronics. All rights reserved
@@ -33,4 +35,10 @@ public interface XmppService {
 
     @ReactMethod
     void sendStanza(String stanza);
+
+    @ReactMethod
+    void setRosterSubscriptionMode(String subscriptionMode);
+
+    @ReactMethod
+    void createEntry(String to);
 }

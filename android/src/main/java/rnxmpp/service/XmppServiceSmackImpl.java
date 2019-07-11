@@ -240,6 +240,7 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
 
     @Override
     public void onRosterLoaded(Roster roster) {
+        roster.setSubscriptionMode(Roster.SubscriptionMode.accept_all);
         this.xmppServiceListener.onRosterReceived(roster);
     }
 
@@ -269,4 +270,26 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
 
     }
 
+    @Override
+    public void setRosterSubscriptionMode(String subscriptionMode) {
+        Roster roster = Roster.getInstanceFor(connection);
+        Roster.SubscriptionMode mode = Roster.SubscriptionMode.valueOf(subscriptionMode);
+        roster.setSubscriptionMode(mode);
+    }
+
+    @Override
+    public void createEntry(String to) {
+        Roster roster = Roster.getInstanceFor(connection);
+        try {
+            roster.createEntry(to,"",null);
+        } catch (SmackException.NotLoggedInException e) {
+            e.printStackTrace();
+        } catch (SmackException.NoResponseException e) {
+            e.printStackTrace();
+        } catch (XMPPException.XMPPErrorException e) {
+            e.printStackTrace();
+        } catch (SmackException.NotConnectedException e) {
+            e.printStackTrace();
+        }
+    }
 }
