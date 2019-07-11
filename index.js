@@ -133,6 +133,14 @@ class XMPP {
         RNXMPP.fetchRoster();
     }
 
+    setRosterSubscriptionMode(subscriptionMode){
+        React.NativeModules.RNXMPP.setRosterSubscriptionMode(subscriptionMode)
+    }
+
+    createRosterEntry(to) {
+        React.NativeModules.RNXMPP.createRosterEntry(to)
+    }
+
     presence(to, type){
         React.NativeModules.RNXMPP.presence(to, type);
     }

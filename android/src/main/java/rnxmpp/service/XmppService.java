@@ -44,5 +44,5 @@ public interface XmppService {
     void setRosterSubscriptionMode(String subscriptionMode);
 
     @ReactMethod
-    void createEntry(String to);
+    String createRosterEntry(String to);
 }

@@ -92,7 +92,7 @@ public class RNXMPPModule extends ReactContextBaseJavaModule implements rnxmpp.s
     }
 
     @Override
-    public void createEntry(String to) {
-        this.xmppService.createEntry(to);
+    public String createRosterEntry(String to) {
+        return this.xmppService.createRosterEntry(to);
     }
 }
