@@ -23,6 +23,18 @@ public interface XmppService {
     void message(String text, String to, String thread) throws XmppStringprepException, InterruptedException, SmackException.NotConnectedException;
 
     @ReactMethod
+    String sendSubscribe(String jid);
+
+    @ReactMethod
+    String sendSubscribed(String jid);
+
+    @ReactMethod
+    String sendUnsubscribe(String jid);
+
+    @ReactMethod
+    String sendUnsubscribed(String jid);
+
+    @ReactMethod
     void presence(String to, String type) throws InterruptedException, SmackException.NotConnectedException;
 
     @ReactMethod

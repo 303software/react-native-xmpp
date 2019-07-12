@@ -198,8 +198,59 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
                 chat = chatManager.createChat(JidCreate.entityBareFrom(to), thread, this);
             }
         }
-
         chat.sendMessage(text);
+    }
+
+    @Override
+    public String sendSubscribe(String jid) {
+        Presence subscribe = new Presence(Presence.Type.subscribe);
+        try {
+            subscribe.setTo(JidCreate.bareFrom(jid));
+            connection.sendStanza(subscribe);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return e.getMessage();
+        }
+        return null;
+    }
+
+    @Override
+    public String sendUnsubscribe(String jid) {
+        Presence unsubscribe = new Presence(Presence.Type.unsubscribe);
+        try {
+            unsubscribe.setTo(JidCreate.bareFrom(jid));
+            connection.sendStanza(unsubscribe);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return e.getMessage();
+        }
+        return null;
+    }
+
+    @Override
+    public String sendSubscribed(String jid) {
+        Presence subscribed = new Presence(Presence.Type.subscribed);
+        try {
+            subscribed.setTo(JidCreate.bareFrom(jid));
+            connection.sendStanza(subscribed);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return e.getMessage();
+        }
+        return null;
+    }
+
+    @Override
+    public String sendUnsubscribed(String jid) {
+        Presence subscribed = new Presence(Presence.Type.unsubscribed);
+        try {
+            subscribed.setTo(JidCreate.bareFrom(jid));
+            connection.sendStanza(subscribed);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return e.getMessage();
+        }
+        return null;
     }
 
     @Override
