@@ -129,20 +129,20 @@ class XMPP {
         RNXMPP.sendStanza(stanza);
     }
 
-    sendSubscribe(jid){
-        RNXMPP.sendSubscribe(jid);
+    sendSubscribe(to, from){
+        RNXMPP.sendSubscribe(to, from);
     }
 
-    sendSubscribed(jid){
-        RNXMPP.sendSubscribed(jid);
+    sendSubscribed(to, from){
+        RNXMPP.sendSubscribed(to, from);
     }
 
-    sendUnsubscribe(jid){
-        RNXMPP.sendUnsubscribe(jid);
+    sendUnsubscribe(to, from){
+        RNXMPP.sendUnsubscribe(to, from);
     }
 
-    sendUnsubscribed(jid){
-        RNXMPP.sendSubscribed(jid);
+    sendUnsubscribed(to, from){
+        RNXMPP.sendSubscribed(to, from);
     }
 
     fetchRoster(){

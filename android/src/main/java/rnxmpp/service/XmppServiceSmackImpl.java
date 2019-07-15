@@ -202,10 +202,11 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
     }
 
     @Override
-    public String sendSubscribe(String jid) {
+    public String sendSubscribe(String to, String from) {
         Presence subscribe = new Presence(Presence.Type.subscribe);
         try {
-            subscribe.setTo(JidCreate.bareFrom(jid));
+            subscribe.setTo(JidCreate.bareFrom(to));
+            subscribe.setFrom(JidCreate.bareFrom(from));
             connection.sendStanza(subscribe);
         } catch (Exception e) {
             e.printStackTrace();
@@ -215,10 +216,11 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
     }
 
     @Override
-    public String sendUnsubscribe(String jid) {
+    public String sendUnsubscribe(String to, String from) {
         Presence unsubscribe = new Presence(Presence.Type.unsubscribe);
         try {
-            unsubscribe.setTo(JidCreate.bareFrom(jid));
+            unsubscribe.setTo(JidCreate.bareFrom(to));
+            unsubscribe.setFrom(JidCreate.bareFrom(from));
             connection.sendStanza(unsubscribe);
         } catch (Exception e) {
             e.printStackTrace();
@@ -228,10 +230,11 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
     }
 
     @Override
-    public String sendSubscribed(String jid) {
+    public String sendSubscribed(String to, String from) {
         Presence subscribed = new Presence(Presence.Type.subscribed);
         try {
-            subscribed.setTo(JidCreate.bareFrom(jid));
+            subscribed.setTo(JidCreate.bareFrom(to));
+            subscribed.setFrom(JidCreate.bareFrom(from));
             connection.sendStanza(subscribed);
         } catch (Exception e) {
             e.printStackTrace();
@@ -241,10 +244,11 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
     }
 
     @Override
-    public String sendUnsubscribed(String jid) {
+    public String sendUnsubscribed(String to, String from) {
         Presence subscribed = new Presence(Presence.Type.unsubscribed);
         try {
-            subscribed.setTo(JidCreate.bareFrom(jid));
+            subscribed.setTo(JidCreate.bareFrom(to));
+            subscribed.setFrom(JidCreate.bareFrom(from));
             connection.sendStanza(subscribed);
         } catch (Exception e) {
             e.printStackTrace();

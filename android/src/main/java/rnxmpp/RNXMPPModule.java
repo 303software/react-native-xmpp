@@ -106,22 +106,22 @@ public class RNXMPPModule extends ReactContextBaseJavaModule implements rnxmpp.s
 
     @Override
     @ReactMethod
-    public String sendSubscribe(String jid) {
-        return this.xmppService.sendSubscribe(jid);
+    public String sendSubscribe(String to, String from) {
+        return this.xmppService.sendSubscribe(to, from);
     }
     @Override
     @ReactMethod
-    public String sendSubscribed(String jid) {
-        return this.xmppService.sendSubscribed(jid);
+    public String sendSubscribed(String to, String from) {
+        return this.xmppService.sendSubscribed(to, from);
     }
     @Override
     @ReactMethod
-    public String sendUnsubscribe(String jid) {
-        return this.xmppService.sendUnsubscribe(jid);
+    public String sendUnsubscribe(String to, String from) {
+        return this.xmppService.sendUnsubscribe(to, from);
     }
     @Override
     @ReactMethod
-    public String sendUnsubscribed(String jid) {
-        return this.xmppService.sendUnsubscribed(jid);
+    public String sendUnsubscribed(String to, String from) {
+        return this.xmppService.sendUnsubscribed(to, from);
     }
 }
