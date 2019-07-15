@@ -364,7 +364,6 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
 
     @Override
     public void onRosterLoaded(Roster roster) {
-        roster.setSubscriptionMode(Roster.SubscriptionMode.accept_all);
         this.xmppServiceListener.onRosterReceived(roster);
     }
 
