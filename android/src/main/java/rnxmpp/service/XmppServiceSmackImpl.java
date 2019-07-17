@@ -1,6 +1,7 @@
 package rnxmpp.service;
 
 import android.os.AsyncTask;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.facebook.react.bridge.ReadableArray;
@@ -208,10 +209,15 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
         Log.d(TAG,String.format("sendSubscribe -- to:%s, from:%s",to,from));
         Presence subscribe = new Presence(Presence.Type.subscribe);
         try {
-            subscribe.setTo(JidCreate.bareFrom(to));
-            subscribe.setFrom(JidCreate.bareFrom(from));
+            if (!TextUtils.isEmpty(to)) {
+                subscribe.setTo(JidCreate.bareFrom(to));
+            }
+            if (!TextUtils.isEmpty(from)) {
+                subscribe.setFrom(JidCreate.bareFrom(from));
+            }
             connection.sendStanza(subscribe);
         } catch (Exception e) {
+            Log.d(TAG,"sendSubscribe Exception:"+e.getMessage());
             e.printStackTrace();
             return e.getMessage();
         }
@@ -223,10 +229,15 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
         Log.d(TAG,String.format("sendUnsubscribe -- to:%s, from:%s",to,from));
         Presence unsubscribe = new Presence(Presence.Type.unsubscribe);
         try {
-            unsubscribe.setTo(JidCreate.bareFrom(to));
-            unsubscribe.setFrom(JidCreate.bareFrom(from));
+            if (!TextUtils.isEmpty(to)) {
+                unsubscribe.setTo(JidCreate.bareFrom(to));
+            }
+            if (!TextUtils.isEmpty(from)) {
+                unsubscribe.setFrom(JidCreate.bareFrom(from));
+            }
             connection.sendStanza(unsubscribe);
         } catch (Exception e) {
+            Log.d(TAG,"sendUnsubscribe Exception:"+e.getMessage());
             e.printStackTrace();
             return e.getMessage();
         }
@@ -238,10 +249,15 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
         Log.d(TAG,String.format("sendSubscribed -- to:%s, from:%s",to,from));
         Presence subscribed = new Presence(Presence.Type.subscribed);
         try {
-            subscribed.setTo(JidCreate.bareFrom(to));
-            subscribed.setFrom(JidCreate.bareFrom(from));
+            if (!TextUtils.isEmpty(to)) {
+                subscribed.setTo(JidCreate.bareFrom(to));
+            }
+            if (!TextUtils.isEmpty(from)) {
+                subscribed.setFrom(JidCreate.bareFrom(from));
+            }
             connection.sendStanza(subscribed);
         } catch (Exception e) {
+            Log.d(TAG,"sendSubscribed Exception:"+e.getMessage());
             e.printStackTrace();
             return e.getMessage();
         }
@@ -253,10 +269,15 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
         Log.d(TAG,String.format("sendUnsubscribed -- to:%s, from:%s",to,from));
         Presence unsubscribed = new Presence(Presence.Type.unsubscribed);
         try {
-            unsubscribed.setTo(JidCreate.bareFrom(to));
-            unsubscribed.setFrom(JidCreate.bareFrom(from));
+            if (!TextUtils.isEmpty(to)) {
+                unsubscribed.setTo(JidCreate.bareFrom(to));
+            }
+            if (!TextUtils.isEmpty(from)) {
+                unsubscribed.setFrom(JidCreate.bareFrom(from));
+            }
             connection.sendStanza(unsubscribed);
         } catch (Exception e) {
+            Log.d(TAG,"sendUnsubscribed Exception:"+e.getMessage());
             e.printStackTrace();
             return e.getMessage();
         }
