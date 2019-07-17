@@ -142,7 +142,7 @@ class XMPP {
     }
 
     sendUnsubscribed(to, from){
-        RNXMPP.sendSubscribed(to, from);
+        RNXMPP.sendUnsubscribed(to, from);
     }
 
     fetchRoster(){

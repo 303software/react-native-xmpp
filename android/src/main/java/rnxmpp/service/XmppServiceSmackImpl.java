@@ -245,11 +245,11 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
 
     @Override
     public String sendUnsubscribed(String to, String from) {
-        Presence subscribed = new Presence(Presence.Type.unsubscribed);
+        Presence unsubscribed = new Presence(Presence.Type.unsubscribed);
         try {
-            subscribed.setTo(JidCreate.bareFrom(to));
-            subscribed.setFrom(JidCreate.bareFrom(from));
-            connection.sendStanza(subscribed);
+            unsubscribed.setTo(JidCreate.bareFrom(to));
+            unsubscribed.setFrom(JidCreate.bareFrom(from));
+            connection.sendStanza(unsubscribed);
         } catch (Exception e) {
             e.printStackTrace();
             return e.getMessage();
