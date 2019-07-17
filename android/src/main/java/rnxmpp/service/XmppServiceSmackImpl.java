@@ -391,6 +391,8 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
 
     @Override
     public void onRosterLoaded(Roster roster) {
+        Log.d(TAG,"onRosterLoaded - setting subscription mode to accept_all.");
+        roster.setSubscriptionMode(Roster.SubscriptionMode.accept_all);
         this.xmppServiceListener.onRosterReceived(roster);
     }
 
