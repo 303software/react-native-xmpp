@@ -1,6 +1,7 @@
 package rnxmpp.service;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.facebook.react.bridge.ReadableArray;
 
@@ -54,6 +55,7 @@ import rnxmpp.ssl.UnsafeSSLContext;
  */
 
 public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, StanzaListener, ConnectionListener, ChatMessageListener, RosterLoadedListener {
+    private static final String TAG = "XMPPServiceSmackImpl";
     XmppServiceListener xmppServiceListener;
     Logger logger = Logger.getLogger(XmppServiceSmackImpl.class.getName());
     XMPPTCPConnection connection;
@@ -203,6 +205,7 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
 
     @Override
     public String sendSubscribe(String to, String from) {
+        Log.d(TAG,String.format("sendSubscribe -- to:%s, from:%s",to,from));
         Presence subscribe = new Presence(Presence.Type.subscribe);
         try {
             subscribe.setTo(JidCreate.bareFrom(to));
@@ -217,6 +220,7 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
 
     @Override
     public String sendUnsubscribe(String to, String from) {
+        Log.d(TAG,String.format("sendUnsubscribe -- to:%s, from:%s",to,from));
         Presence unsubscribe = new Presence(Presence.Type.unsubscribe);
         try {
             unsubscribe.setTo(JidCreate.bareFrom(to));
@@ -231,6 +235,7 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
 
     @Override
     public String sendSubscribed(String to, String from) {
+        Log.d(TAG,String.format("sendSubscribed -- to:%s, from:%s",to,from));
         Presence subscribed = new Presence(Presence.Type.subscribed);
         try {
             subscribed.setTo(JidCreate.bareFrom(to));
@@ -245,6 +250,7 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
 
     @Override
     public String sendUnsubscribed(String to, String from) {
+        Log.d(TAG,String.format("sendUnsubscribed -- to:%s, from:%s",to,from));
         Presence unsubscribed = new Presence(Presence.Type.unsubscribed);
         try {
             unsubscribed.setTo(JidCreate.bareFrom(to));
