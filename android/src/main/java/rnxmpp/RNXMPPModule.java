@@ -124,4 +124,19 @@ public class RNXMPPModule extends ReactContextBaseJavaModule implements rnxmpp.s
     public String sendUnsubscribed(String to, String from) {
         return this.xmppService.sendUnsubscribed(to, from);
     }
+
+    @Override
+    public String createInstantRoom(String jid, String roomNickname) {
+        return this.xmppService.createInstantRoom(jid, roomNickname);
+    }
+
+    @Override
+    public String joinRoom(String jid, String roomNickname) {
+        return this.xmppService.joinRoom(jid, roomNickname);
+    }
+
+    @Override
+    public String getHostedRooms(String jid) {
+        return this.xmppService.getHostedRooms(jid);
+    }
 }

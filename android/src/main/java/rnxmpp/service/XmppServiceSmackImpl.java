@@ -32,11 +32,15 @@ import org.jivesoftware.smack.util.XmlStringBuilder;
 import org.jivesoftware.smackx.forward.packet.Forwarded;
 import org.jivesoftware.smackx.mam.MamManager;
 import org.jivesoftware.smackx.mam.element.MamElements;
+import org.jivesoftware.smackx.muc.HostedRoom;
+import org.jivesoftware.smackx.muc.MultiUserChat;
+import org.jivesoftware.smackx.muc.MultiUserChatManager;
 import org.jivesoftware.smackx.rsm.packet.RSMSet;
 import org.jivesoftware.smackx.xdata.FormField;
 import org.jivesoftware.smackx.xdata.packet.DataForm;
 import org.jxmpp.jid.DomainBareJid;
 import org.jxmpp.jid.impl.JidCreate;
+import org.jxmpp.jid.parts.Resourcepart;
 import org.jxmpp.stringprep.XmppStringprepException;
 
 import java.io.IOException;
@@ -456,6 +460,58 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
             }
             roster.removeEntry(entry);
         } catch (Exception e) {
+            e.printStackTrace();
+            return e.getMessage();
+        }
+        return null;
+    }
+
+    @Override
+    public String createInstantRoom(String jid, String roomNickname) {
+        // Get the MultiUserChatManager
+        MultiUserChatManager manager = MultiUserChatManager.getInstanceFor(connection);
+        try {
+            // Get a MultiUserChat using MultiUserChatManager
+            MultiUserChat muc = manager.getMultiUserChat(JidCreate.entityBareFrom(jid));
+
+            // Create the room and send an empty configuration form to make this an instant room.
+            Resourcepart nickname = Resourcepart.from(roomNickname);
+            muc.create(nickname).makeInstant();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return e.getMessage();
+        }
+        return null;
+    }
+
+    @Override
+    public String joinRoom(String jid, String roomNickname) {
+        // Get the MultiUserChatManager
+        MultiUserChatManager manager = MultiUserChatManager.getInstanceFor(connection);
+        try {
+            // Create a MultiUserChat using an XMPPConnection for a room
+            MultiUserChat muc2 = manager.getMultiUserChat(JidCreate.entityBareFrom(jid));
+            Resourcepart nickname = Resourcepart.from(roomNickname);
+            muc2.join(nickname);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return e.getMessage();
+        }
+        return null;
+
+    }
+
+    @Override
+    public String getHostedRooms(String jid) {
+        // Get the MultiUserChatManager
+        MultiUserChatManager manager = MultiUserChatManager.getInstanceFor(connection);
+        try {
+            List<HostedRoom> rooms = manager.getHostedRooms(JidCreate.domainBareFrom(jid));
+            this.xmppServiceListener.onRoomsReceived(rooms);
+        }
+        catch (Exception e) {
             e.printStackTrace();
             return e.getMessage();
         }

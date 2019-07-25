@@ -13,7 +13,8 @@ var map = {
     'error': 'RNXMPPError',
     'loginError': 'RNXMPPLoginError',
     'login': 'RNXMPPLogin',
-    'roster': 'RNXMPPRoster'
+    'roster': 'RNXMPPRoster',
+    'rooms': 'RNXMPPHostedRooms'
 }
 
 const LOG = (message) => {
@@ -159,6 +160,18 @@ class XMPP {
 
     removeRosterEntry(jid){
         RNXMPP.removeRosterEntry(jid);
+    }
+
+    createInstantRoom(jid, nickname) {
+        RNXMPP.createInstantRoom(jid,nickname);
+    }
+
+    joinRoom(jid, nickname) {
+        RNXMPP.joinRoom(jid,nickname);
+    }
+
+    getHostedRooms(jid) {
+        RNXMPP.getHostedRooms(jid);
     }
 
     presence(to, type){

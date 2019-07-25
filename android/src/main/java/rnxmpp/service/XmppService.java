@@ -60,4 +60,13 @@ public interface XmppService {
 
     @ReactMethod
     String removeRosterEntry(String jid);
+
+    @ReactMethod
+    String createInstantRoom(String jid, String roomNickname);
+
+    @ReactMethod
+    String joinRoom(String jid, String roomNickname);
+
+    @ReactMethod
+    String getHostedRooms(String jid);
 }
