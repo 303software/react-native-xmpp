@@ -1,4 +1,4 @@
-package rnxmpp.service;
+package com.rnxmpp.service;
 
 import android.support.annotation.Nullable;
 
@@ -19,7 +19,7 @@ import org.jxmpp.stringprep.XmppStringprepException;
 
 import java.util.List;
 
-import rnxmpp.utils.Parser;
+import com.rnxmpp.utils.Parser;
 
 /**
  * Created by Kristian Frølund on 7/19/16.
