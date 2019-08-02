@@ -1,4 +1,4 @@
-package com.rnxmpp.service;
+package rnxmpp.service;
 
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;

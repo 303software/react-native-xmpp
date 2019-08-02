@@ -1,4 +1,4 @@
-package com.rnxmpp.ssl;
+package rnxmpp.ssl;
 
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;

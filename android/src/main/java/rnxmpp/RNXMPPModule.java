@@ -1,4 +1,4 @@
-package com.rnxmpp;
+package rnxmpp;
 
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -10,14 +10,14 @@ import org.jxmpp.stringprep.XmppStringprepException;
 
 import java.util.logging.Logger;
 
-import com.rnxmpp.service.RNXMPPCommunicationBridge;
-import com.rnxmpp.service.XmppServiceSmackImpl;
+import rnxmpp.service.RNXMPPCommunicationBridge;
+import rnxmpp.service.XmppServiceSmackImpl;
 
 /**
  * Created by Kristian Frølund on 7/19/16.
  * Copyright (c) 2016. Teletronics. All rights reserved
  */
-public class RNXMPPModule extends ReactContextBaseJavaModule implements com.rnxmpp.service.XmppService {
+public class RNXMPPModule extends ReactContextBaseJavaModule implements rnxmpp.service.XmppService {
 
     public static final String MODULE_NAME = "RNXMPP";
     Logger logger = Logger.getLogger(RNXMPPModule.class.getName());

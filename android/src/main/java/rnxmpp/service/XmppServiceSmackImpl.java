@@ -1,4 +1,4 @@
-package com.rnxmpp.service;
+package rnxmpp.service;
 
 import android.os.AsyncTask;
 import android.text.TextUtils;
@@ -51,7 +51,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import de.measite.minidns.util.InetAddressUtil;
-import com.rnxmpp.ssl.UnsafeSSLContext;
+import rnxmpp.ssl.UnsafeSSLContext;
 
 
 /**
