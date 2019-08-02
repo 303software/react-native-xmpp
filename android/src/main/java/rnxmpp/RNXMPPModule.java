@@ -126,16 +126,19 @@ public class RNXMPPModule extends ReactContextBaseJavaModule implements rnxmpp.s
     }
 
     @Override
+    @ReactMethod
     public String createInstantRoom(String jid, String roomNickname) {
         return this.xmppService.createInstantRoom(jid, roomNickname);
     }
 
     @Override
+    @ReactMethod
     public String joinRoom(String jid, String roomNickname) {
         return this.xmppService.joinRoom(jid, roomNickname);
     }
 
     @Override
+    @ReactMethod
     public String getHostedRooms(String jid) {
         return this.xmppService.getHostedRooms(jid);
     }
