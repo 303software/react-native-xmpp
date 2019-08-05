@@ -192,10 +192,15 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
                 MultiUserChatManager manager = MultiUserChatManager.getInstanceFor(connection);
                 try {
                     List<EntityBareJid> joinedRooms = manager.getJoinedRooms(JidCreate.entityBareFrom(jid));
-                    for (EntityBareJid roomJid: joinedRooms) {
-                        MultiUserChat muc = manager.getMultiUserChat(roomJid);
-                        Log.d(TAG,"Added message listener for: "+roomJid.asEntityBareJidString());
-                        muc.addMessageListener(XmppServiceSmackImpl.this);
+                    if (joinedRooms != null) {
+                        Log.d(TAG, "Found existing joined rooms: " + Integer.toString(joinedRooms.size()));
+                        for (EntityBareJid roomJid : joinedRooms) {
+                            Log.d(TAG, "Fetching MultiUserChat object for: " + roomJid.asEntityBareJidString());
+                            MultiUserChat muc = manager.getMultiUserChat(roomJid);
+                            Log.d(TAG, "Adding message listener for: " + roomJid.asEntityBareJidString());
+                            muc.addMessageListener(XmppServiceSmackImpl.this);
+                            Log.d(TAG, "Message listener added.");
+                        }
                     }
 
                 } catch (Exception e) {
@@ -337,6 +342,7 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
 
     @Override
     public void processMessage(Message message) {
+        Log.d(TAG, "processMessage: " + message.getBody());
         this.xmppServiceListener.onMessage(message);
     }
 
@@ -409,6 +415,7 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
 
     @Override
     public void processMessage(Chat chat, Message message) {
+        Log.d(TAG, "processChatMessage: " + message.getBody());
         this.xmppServiceListener.onMessage(message);
     }
 
@@ -492,6 +499,7 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
         try {
             // Get a MultiUserChat using MultiUserChatManager
             MultiUserChat muc = manager.getMultiUserChat(JidCreate.entityBareFrom(jid));
+            Log.d(TAG, "CreateInstantRoom - Adding message listener for: " + jid);
             muc.addMessageListener(this);
 
             // Create the room and send an empty configuration form to make this an instant room.
@@ -512,6 +520,7 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
         try {
             // Create a MultiUserChat using an XMPPConnection for a room
             MultiUserChat muc2 = manager.getMultiUserChat(JidCreate.entityBareFrom(jid));
+            Log.d(TAG, "joinRoom - Adding message listener for: " + jid);
             muc2.addMessageListener(this);
             Resourcepart nickname = Resourcepart.from(roomNickname);
             muc2.join(nickname);
