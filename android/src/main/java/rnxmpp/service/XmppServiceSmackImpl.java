@@ -8,6 +8,7 @@ import com.facebook.react.bridge.ReadableArray;
 
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.ConnectionListener;
+import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.StanzaListener;
 import org.jivesoftware.smack.XMPPConnection;
@@ -39,6 +40,7 @@ import org.jivesoftware.smackx.rsm.packet.RSMSet;
 import org.jivesoftware.smackx.xdata.FormField;
 import org.jivesoftware.smackx.xdata.packet.DataForm;
 import org.jxmpp.jid.DomainBareJid;
+import org.jxmpp.jid.EntityBareJid;
 import org.jxmpp.jid.impl.JidCreate;
 import org.jxmpp.jid.parts.Resourcepart;
 import org.jxmpp.stringprep.XmppStringprepException;
@@ -59,7 +61,7 @@ import rnxmpp.ssl.UnsafeSSLContext;
  * Copyright (c) 2016. Teletronics. All rights reserved
  */
 
-public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, StanzaListener, ConnectionListener, ChatMessageListener, RosterLoadedListener {
+public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, StanzaListener, ConnectionListener, ChatMessageListener, RosterLoadedListener, MessageListener {
     private static final String TAG = "XMPPServiceSmackImpl";
     XmppServiceListener xmppServiceListener;
     Logger logger = Logger.getLogger(XmppServiceSmackImpl.class.getName());
@@ -123,7 +125,7 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
     }
 
     @Override
-    public void connect(String jid, String password, String authMethod, String hostname, Integer port) throws XmppStringprepException {
+    public void connect(final String jid, String password, String authMethod, String hostname, Integer port) throws XmppStringprepException {
         final String[] jidParts = jid.split("@");
         String[] serviceNameParts = jidParts[1].split("/");
         String serviceName = serviceNameParts[0];
@@ -187,7 +189,19 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
 
             @Override
             protected void onPostExecute(Void dummy) {
+                MultiUserChatManager manager = MultiUserChatManager.getInstanceFor(connection);
+                try {
+                    List<EntityBareJid> joinedRooms = manager.getJoinedRooms(JidCreate.entityBareFrom(jid));
+                    for (EntityBareJid roomJid: joinedRooms) {
+                        MultiUserChat muc = manager.getMultiUserChat(roomJid);
+                        Log.d(TAG,"Added message listener for: "+roomJid.asEntityBareJidString());
+                        muc.addMessageListener(XmppServiceSmackImpl.this);
+                    }
 
+                } catch (Exception e) {
+                    Log.d(TAG,"Exception while setting up listeners for existing rooms: "+e.getMessage());
+                    e.printStackTrace();
+                }
             }
         }.execute();
     }
@@ -319,6 +333,11 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
         } catch (SmackException.NotLoggedInException | SmackException.NotConnectedException | InterruptedException e) {
             logger.log(Level.WARNING, "Could not fetch roster", e);
         }
+    }
+
+    @Override
+    public void processMessage(Message message) {
+        this.xmppServiceListener.onMessage(message);
     }
 
     public class StanzaPacket extends org.jivesoftware.smack.packet.Stanza {
@@ -473,6 +492,7 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
         try {
             // Get a MultiUserChat using MultiUserChatManager
             MultiUserChat muc = manager.getMultiUserChat(JidCreate.entityBareFrom(jid));
+            muc.addMessageListener(this);
 
             // Create the room and send an empty configuration form to make this an instant room.
             Resourcepart nickname = Resourcepart.from(roomNickname);
@@ -492,6 +512,7 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
         try {
             // Create a MultiUserChat using an XMPPConnection for a room
             MultiUserChat muc2 = manager.getMultiUserChat(JidCreate.entityBareFrom(jid));
+            muc2.addMessageListener(this);
             Resourcepart nickname = Resourcepart.from(roomNickname);
             muc2.join(nickname);
         }
@@ -507,9 +528,18 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
     public String getHostedRooms(String jid) {
         // Get the MultiUserChatManager
         MultiUserChatManager manager = MultiUserChatManager.getInstanceFor(connection);
+//        List<HostedRoom> allRooms = new ArrayList<>();
         try {
             List<HostedRoom> rooms = manager.getHostedRooms(JidCreate.domainBareFrom(jid));
             this.xmppServiceListener.onRoomsReceived(rooms);
+//            List<DomainBareJid> serviceDomains = manager.getXMPPServiceDomains();
+//            for (DomainBareJid domainBareJid:serviceDomains) {
+//                List<HostedRoom> rooms = manager.getHostedRooms(domainBareJid);
+//                if (rooms != null) {
+//                    allRooms.addAll(rooms);
+//                }
+//            }
+//            this.xmppServiceListener.onRoomsReceived(allRooms);
         }
         catch (Exception e) {
             e.printStackTrace();
