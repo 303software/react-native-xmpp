@@ -19,6 +19,7 @@ import org.jxmpp.jid.EntityBareJid;
 import org.jxmpp.stringprep.XmppStringprepException;
 
 import java.util.List;
+import java.util.Set;
 
 import rnxmpp.utils.Parser;
 
@@ -104,7 +105,7 @@ public class RNXMPPCommunicationBridge implements XmppServiceListener {
     }
 
     @Override
-    public void onJoinedRoomsReceived(List<EntityBareJid> rooms) {
+    public void onJoinedRoomsReceived(Set<EntityBareJid> rooms) {
         WritableArray roomsResponse = Arguments.createArray();
         for (EntityBareJid roomJid : rooms) {
             WritableMap roomProps = Arguments.createMap();

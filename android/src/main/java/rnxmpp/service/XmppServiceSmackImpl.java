@@ -49,6 +49,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -552,7 +553,8 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
         // Get the MultiUserChatManager
         MultiUserChatManager manager = MultiUserChatManager.getInstanceFor(connection);
         try {
-            List<EntityBareJid> joinedRooms = manager.getJoinedRooms(JidCreate.entityBareFrom(jid));
+            Log.d(TAG, "Getting joined rooms...");
+            Set<EntityBareJid> joinedRooms = manager.getJoinedRooms();
             if (joinedRooms != null) {
                 Log.d(TAG, "Found existing joined rooms: " + Integer.toString(joinedRooms.size()));
                 for (EntityBareJid roomJid : joinedRooms) {

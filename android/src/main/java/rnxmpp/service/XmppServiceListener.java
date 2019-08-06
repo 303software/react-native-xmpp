@@ -9,6 +9,7 @@ import org.jxmpp.jid.EntityBareJid;
 import org.jxmpp.stringprep.XmppStringprepException;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Kristian Frølund on 7/19/16.
@@ -22,7 +23,7 @@ public interface XmppServiceListener {
     void onMessage(Message message);
     void onRosterReceived(Roster roster);
     void onHostedRoomsReceived(List<HostedRoom> rooms);
-    void onJoinedRoomsReceived(List<EntityBareJid> rooms);
+    void onJoinedRoomsReceived(Set<EntityBareJid> rooms);
     void onIQ(IQ iq);
     void onArchiveMessage(String message);
     void onPresence(Presence presence) throws XmppStringprepException;
