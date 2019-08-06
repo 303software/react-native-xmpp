@@ -5,6 +5,7 @@ import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smackx.muc.HostedRoom;
+import org.jxmpp.jid.EntityBareJid;
 import org.jxmpp.stringprep.XmppStringprepException;
 
 import java.util.List;
@@ -20,7 +21,8 @@ public interface XmppServiceListener {
     void onLoginError(Exception e);
     void onMessage(Message message);
     void onRosterReceived(Roster roster);
-    void onRoomsReceived(List<HostedRoom> rooms);
+    void onHostedRoomsReceived(List<HostedRoom> rooms);
+    void onJoinedRoomsReceived(List<EntityBareJid> rooms);
     void onIQ(IQ iq);
     void onArchiveMessage(String message);
     void onPresence(Presence presence) throws XmppStringprepException;

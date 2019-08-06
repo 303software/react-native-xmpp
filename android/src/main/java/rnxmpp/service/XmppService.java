@@ -69,4 +69,7 @@ public interface XmppService {
 
     @ReactMethod
     String getHostedRooms(String jid);
+
+    @ReactMethod
+    String getJoinedRooms(String jid);
 }

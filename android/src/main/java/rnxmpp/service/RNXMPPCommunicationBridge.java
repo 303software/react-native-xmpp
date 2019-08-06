@@ -15,6 +15,7 @@ import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterEntry;
 import org.jivesoftware.smack.roster.RosterGroup;
 import org.jivesoftware.smackx.muc.HostedRoom;
+import org.jxmpp.jid.EntityBareJid;
 import org.jxmpp.stringprep.XmppStringprepException;
 
 import java.util.List;
@@ -34,6 +35,7 @@ public class RNXMPPCommunicationBridge implements XmppServiceListener {
     public static final String RNXMPP_ARCHIVED_MESSAGE = "RNXMPPArchivedMessage";
     public static final String RNXMPP_ROSTER =           "RNXMPPRoster";
     public static final String RNXMPP_HOSTED_ROOMS =     "RNXMPPHostedRooms";
+    public static final String RNXMPP_JOINED_ROOMS =     "RNXMPPJoinedRooms";
     public static final String RNXMPP_IQ =               "RNXMPPIQ";
     public static final String RNXMPP_PRESENCE =         "RNXMPPPresence";
     public static final String RNXMPP_CONNECT =          "RNXMPPConnect";
@@ -90,7 +92,7 @@ public class RNXMPPCommunicationBridge implements XmppServiceListener {
     }
 
     @Override
-    public void onRoomsReceived(List<HostedRoom> rooms) {
+    public void onHostedRoomsReceived(List<HostedRoom> rooms) {
         WritableArray roomsResponse = Arguments.createArray();
         for (HostedRoom room : rooms) {
             WritableMap roomProps = Arguments.createMap();
@@ -99,6 +101,17 @@ public class RNXMPPCommunicationBridge implements XmppServiceListener {
             roomsResponse.pushMap(roomProps);
         }
         sendEvent(reactContext, RNXMPP_HOSTED_ROOMS, roomsResponse);
+    }
+
+    @Override
+    public void onJoinedRoomsReceived(List<EntityBareJid> rooms) {
+        WritableArray roomsResponse = Arguments.createArray();
+        for (EntityBareJid roomJid : rooms) {
+            WritableMap roomProps = Arguments.createMap();
+            roomProps.putString("jid", roomJid.asEntityBareJidString());
+            roomsResponse.pushMap(roomProps);
+        }
+        sendEvent(reactContext, RNXMPP_JOINED_ROOMS, roomsResponse);
     }
 
     @Override

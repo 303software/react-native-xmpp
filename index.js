@@ -14,7 +14,8 @@ var map = {
     'loginError': 'RNXMPPLoginError',
     'login': 'RNXMPPLogin',
     'roster': 'RNXMPPRoster',
-    'rooms': 'RNXMPPHostedRooms'
+    'hostedRooms': 'RNXMPPHostedRooms',
+    'joinedRooms': 'RNXMPPJoinedRooms'
 }
 
 const LOG = (message) => {
@@ -172,6 +173,10 @@ class XMPP {
 
     getHostedRooms(jid) {
         RNXMPP.getHostedRooms(jid);
+    }
+
+    getJoinedRooms(jid) {
+        RNXMPP.getJoinedRooms(jid);
     }
 
     presence(to, type){

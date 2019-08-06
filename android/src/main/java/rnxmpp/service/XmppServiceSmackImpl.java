@@ -189,24 +189,6 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
 
             @Override
             protected void onPostExecute(Void dummy) {
-                MultiUserChatManager manager = MultiUserChatManager.getInstanceFor(connection);
-                try {
-                    List<EntityBareJid> joinedRooms = manager.getJoinedRooms(JidCreate.entityBareFrom(jid));
-                    if (joinedRooms != null) {
-                        Log.d(TAG, "Found existing joined rooms: " + Integer.toString(joinedRooms.size()));
-                        for (EntityBareJid roomJid : joinedRooms) {
-                            Log.d(TAG, "Fetching MultiUserChat object for: " + roomJid.asEntityBareJidString());
-                            MultiUserChat muc = manager.getMultiUserChat(roomJid);
-                            Log.d(TAG, "Adding message listener for: " + roomJid.asEntityBareJidString());
-                            muc.addMessageListener(XmppServiceSmackImpl.this);
-                            Log.d(TAG, "Message listener added.");
-                        }
-                    }
-
-                } catch (Exception e) {
-                    Log.d(TAG,"Exception while setting up listeners for existing rooms: "+e.getMessage());
-                    e.printStackTrace();
-                }
             }
         }.execute();
     }
@@ -493,28 +475,33 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
     }
 
     @Override
-    public String createInstantRoom(String jid, String roomNickname) {
+    public String createInstantRoom(String jid, String nickname) {
         // Get the MultiUserChatManager
         MultiUserChatManager manager = MultiUserChatManager.getInstanceFor(connection);
         try {
             // Get a MultiUserChat using MultiUserChatManager
             MultiUserChat muc = manager.getMultiUserChat(JidCreate.entityBareFrom(jid));
-            Log.d(TAG, "CreateInstantRoom - Adding message listener for: " + jid);
-            muc.addMessageListener(this);
+//            Log.d(TAG, "CreateInstantRoom - Adding message listener for: " + jid);
+//            muc.addMessageListener(this);
 
             // Create the room and send an empty configuration form to make this an instant room.
-            Resourcepart nickname = Resourcepart.from(roomNickname);
-            muc.create(nickname).makeInstant();
+            Resourcepart nicknameResourcepart = Resourcepart.from(nickname);
+            Log.d(TAG,"Making instant room for: "+jid);
+            muc.create(nicknameResourcepart).makeInstant();
+
+            // Auto join this room.
+            joinRoom(jid,nickname);
         }
         catch (Exception e) {
             e.printStackTrace();
+            Log.d(TAG,"Exception while creating room: "+e.getMessage());
             return e.getMessage();
         }
         return null;
     }
 
     @Override
-    public String joinRoom(String jid, String roomNickname) {
+    public String joinRoom(String jid, String nickname) {
         // Get the MultiUserChatManager
         MultiUserChatManager manager = MultiUserChatManager.getInstanceFor(connection);
         try {
@@ -522,11 +509,13 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
             MultiUserChat muc2 = manager.getMultiUserChat(JidCreate.entityBareFrom(jid));
             Log.d(TAG, "joinRoom - Adding message listener for: " + jid);
             muc2.addMessageListener(this);
-            Resourcepart nickname = Resourcepart.from(roomNickname);
-            muc2.join(nickname);
+            Resourcepart nicknameResourcepart = Resourcepart.from(nickname);
+            Log.d(TAG,"Joining "+jid+" for "+nickname);
+            muc2.join(nicknameResourcepart);
         }
         catch (Exception e) {
             e.printStackTrace();
+            Log.d(TAG,"Exception while joining room: "+e.getMessage());
             return e.getMessage();
         }
         return null;
@@ -540,7 +529,7 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
 //        List<HostedRoom> allRooms = new ArrayList<>();
         try {
             List<HostedRoom> rooms = manager.getHostedRooms(JidCreate.domainBareFrom(jid));
-            this.xmppServiceListener.onRoomsReceived(rooms);
+            this.xmppServiceListener.onHostedRoomsReceived(rooms);
 //            List<DomainBareJid> serviceDomains = manager.getXMPPServiceDomains();
 //            for (DomainBareJid domainBareJid:serviceDomains) {
 //                List<HostedRoom> rooms = manager.getHostedRooms(domainBareJid);
@@ -552,6 +541,40 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
         }
         catch (Exception e) {
             e.printStackTrace();
+            Log.d(TAG,"Exception while fetching hosted rooms: "+e.getMessage());
+            return e.getMessage();
+        }
+        return null;
+    }
+
+    @Override
+    public String getJoinedRooms(String jid) {
+        // Get the MultiUserChatManager
+        MultiUserChatManager manager = MultiUserChatManager.getInstanceFor(connection);
+        try {
+            List<EntityBareJid> joinedRooms = manager.getJoinedRooms(JidCreate.entityBareFrom(jid));
+            if (joinedRooms != null) {
+                Log.d(TAG, "Found existing joined rooms: " + Integer.toString(joinedRooms.size()));
+                for (EntityBareJid roomJid : joinedRooms) {
+                    try {
+                        Log.d(TAG, "Fetching MultiUserChat object for: " + roomJid.asEntityBareJidString());
+                        MultiUserChat muc = manager.getMultiUserChat(roomJid);
+                        Log.d(TAG, "Adding message listener for: " + roomJid.asEntityBareJidString());
+                        muc.addMessageListener(XmppServiceSmackImpl.this);
+                        Log.d(TAG, "Message listener added.");
+                    }
+                    catch (Exception e) {
+                        e.printStackTrace();
+                        Log.d(TAG,"Exception while setting up listeners for existing joined rooms: "+e.getMessage());
+                        return e.getMessage();
+                    }
+                }
+            }
+            this.xmppServiceListener.onJoinedRoomsReceived(joinedRooms);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            Log.d(TAG,"Exception while fetching joined rooms: "+e.getMessage());
             return e.getMessage();
         }
         return null;
