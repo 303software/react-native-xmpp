@@ -550,6 +550,7 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
 
     @Override
     public String getJoinedRooms(String jid) {
+        Log.d(TAG, "getJoinedRooms called with: "+jid);
         // Get the MultiUserChatManager
         MultiUserChatManager manager = MultiUserChatManager.getInstanceFor(connection);
         try {
