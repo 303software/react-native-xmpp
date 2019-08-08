@@ -297,6 +297,8 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
 
     @Override
     public void removeRoster(String to) throws XmppStringprepException {
+        Log.d(TAG,"removeRoster called with: "+to);
+
         Roster roster = Roster.getInstanceFor(connection);
         RosterEntry rosterEntry = roster.getEntry(JidCreate.bareFrom(to));
         if (rosterEntry != null){
@@ -316,6 +318,8 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
 
     @Override
     public void fetchRoster() {
+        Log.d(TAG,"fetchRoster called");
+
         try {
             roster.reload();
         } catch (SmackException.NotLoggedInException | SmackException.NotConnectedException | InterruptedException e) {
@@ -404,6 +408,7 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
 
     @Override
     public void onRosterLoaded(Roster roster) {
+        Log.d(TAG,"onRosterLoaded: "+roster.toString());
         Log.d(TAG,"onRosterLoaded - setting subscription mode to accept_all.");
         roster.setSubscriptionMode(Roster.SubscriptionMode.accept_all);
         this.xmppServiceListener.onRosterReceived(roster);
@@ -449,6 +454,7 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
 
     @Override
     public String createRosterEntry(String to) {
+        Log.d(TAG,"createRosterEntry called with: "+to);
         Roster roster = Roster.getInstanceFor(connection);
         try {
             roster.createEntry(JidCreate.bareFrom(to),"",null);
@@ -461,6 +467,7 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
 
     @Override
     public String removeRosterEntry(String jid) {
+        Log.d(TAG,"removeRosterEntry called with: "+jid);
         Roster roster = Roster.getInstanceFor(connection);
         try {
             RosterEntry entry = roster.getEntry(JidCreate.bareFrom(jid));
@@ -477,6 +484,7 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
 
     @Override
     public String createInstantRoom(String jid, String nickname) {
+        Log.d(TAG,"createInstantRoom called with: "+jid+", "+nickname);
         // Get the MultiUserChatManager
         MultiUserChatManager manager = MultiUserChatManager.getInstanceFor(connection);
         try {
@@ -491,6 +499,7 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
             muc.create(nicknameResourcepart).makeInstant();
 
             // Auto join this room.
+            Log.d(TAG,"createInstantRoom calling to joinRoom: "+jid+", "+nickname);
             joinRoom(jid,nickname);
         }
         catch (Exception e) {
@@ -503,6 +512,7 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
 
     @Override
     public String joinRoom(String jid, String nickname) {
+        Log.d(TAG,"joinRoom called with: "+jid+", "+nickname);
         // Get the MultiUserChatManager
         MultiUserChatManager manager = MultiUserChatManager.getInstanceFor(connection);
         try {
@@ -525,6 +535,7 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
 
     @Override
     public String getHostedRooms(String jid) {
+        Log.d(TAG,"getHostedRooms called with: "+jid);
         // Get the MultiUserChatManager
         MultiUserChatManager manager = MultiUserChatManager.getInstanceFor(connection);
 //        List<HostedRoom> allRooms = new ArrayList<>();
