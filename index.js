@@ -179,6 +179,14 @@ class XMPP {
         RNXMPP.getJoinedRooms(jid);
     }
 
+    leaveRoom(jid) {
+        RNXMPP.leaveRoom(jid);
+    }
+
+    sendMucMessage(text, roomJid) {
+        RNXMPP.sendMucMessage(text, roomJid);
+    }
+
     presence(to, type){
         React.NativeModules.RNXMPP.presence(to, type);
     }

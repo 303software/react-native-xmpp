@@ -211,6 +211,32 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
     }
 
     @Override
+    public void sendMucMessage(String text, String roomJid)  {
+        Log.d(TAG,"mucMessage called with: "+text+", "+roomJid);
+        // Get the MultiUserChatManager
+        MultiUserChatManager manager = MultiUserChatManager.getInstanceFor(connection);
+        // Create EntityBareJid.
+        EntityBareJid entityBareJid = null;
+        try {
+            entityBareJid = JidCreate.entityBareFrom(roomJid);
+        } catch (XmppStringprepException e) {
+            e.printStackTrace();
+            Log.d(TAG, "Exception while creating entityBareJid: "+e.getMessage());
+        }
+        // Create a MultiUserChat using an XMPPConnection for a room
+        MultiUserChat muc = manager.getMultiUserChat(entityBareJid);
+        try {
+            muc.sendMessage(text);
+        } catch (SmackException.NotConnectedException e) {
+            e.printStackTrace();
+            Log.d(TAG, "NotConnectedException while sending MUC message: "+e.getMessage());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            Log.d(TAG, "InteruptedException while sending MUC message: "+e.getMessage());
+        }
+    }
+
+    @Override
     public String sendSubscribe(String to, String from) {
         Log.d(TAG,String.format("sendSubscribe -- to:%s, from:%s",to,from));
         Presence subscribe = new Presence(Presence.Type.subscribe);
@@ -490,17 +516,14 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
         try {
             // Get a MultiUserChat using MultiUserChatManager
             MultiUserChat muc = manager.getMultiUserChat(JidCreate.entityBareFrom(jid));
-//            Log.d(TAG, "CreateInstantRoom - Adding message listener for: " + jid);
-//            muc.addMessageListener(this);
 
             // Create the room and send an empty configuration form to make this an instant room.
             Resourcepart nicknameResourcepart = Resourcepart.from(nickname);
             Log.d(TAG,"Making instant room for: "+jid);
-            muc.create(nicknameResourcepart).makeInstant();
+            muc.createOrJoin(nicknameResourcepart).makeInstant();
 
-            // Auto join this room.
-            Log.d(TAG,"createInstantRoom calling to joinRoom: "+jid+", "+nickname);
-            joinRoom(jid,nickname);
+            Log.d(TAG, "CreateInstantRoom - Adding message listener for: " + jid);
+            muc.addMessageListener(this);
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -531,6 +554,25 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
         }
         return null;
 
+    }
+
+    @Override
+    public String leaveRoom(String jid) {
+        Log.d(TAG,"leaveRoom called with: "+jid);
+        // Get the MultiUserChatManager
+        MultiUserChatManager manager = MultiUserChatManager.getInstanceFor(connection);
+        try {
+            // Create a MultiUserChat using an XMPPConnection for a room
+            MultiUserChat muc = manager.getMultiUserChat(JidCreate.entityBareFrom(jid));
+            Log.d(TAG,"Leaving "+jid);
+            muc.leave();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            Log.d(TAG,"Exception while joining room: "+e.getMessage());
+            return e.getMessage();
+        }
+        return null;
     }
 
     @Override
@@ -573,8 +615,8 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
                     try {
                         Log.d(TAG, "Fetching MultiUserChat object for: " + roomJid.asEntityBareJidString());
                         MultiUserChat muc = manager.getMultiUserChat(roomJid);
-                        Log.d(TAG, "Adding message listener for: " + roomJid.asEntityBareJidString());
-                        muc.addMessageListener(XmppServiceSmackImpl.this);
+//                        Log.d(TAG, "Adding message listener for: " + roomJid.asEntityBareJidString());
+//                        muc.addMessageListener(XmppServiceSmackImpl.this);
                         Log.d(TAG, "Message listener added.");
                     }
                     catch (Exception e) {

@@ -68,8 +68,14 @@ public interface XmppService {
     String joinRoom(String jid, String roomNickname);
 
     @ReactMethod
+    String leaveRoom(String jid);
+
+    @ReactMethod
     String getHostedRooms(String jid);
 
     @ReactMethod
     String getJoinedRooms(String jid);
+
+    @ReactMethod
+    void sendMucMessage(String text, String roomJid);
 }
