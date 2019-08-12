@@ -37,6 +37,7 @@ public class RNXMPPCommunicationBridge implements XmppServiceListener {
     public static final String RNXMPP_ROSTER =           "RNXMPPRoster";
     public static final String RNXMPP_HOSTED_ROOMS =     "RNXMPPHostedRooms";
     public static final String RNXMPP_JOINED_ROOMS =     "RNXMPPJoinedRooms";
+    public static final String RNXMPP_ROOM_OCCUPANTS =     "RNXMPPRoomOccupants";
     public static final String RNXMPP_IQ =               "RNXMPPIQ";
     public static final String RNXMPP_PRESENCE =         "RNXMPPPresence";
     public static final String RNXMPP_CONNECT =          "RNXMPPConnect";
@@ -113,6 +114,20 @@ public class RNXMPPCommunicationBridge implements XmppServiceListener {
             roomsResponse.pushMap(roomProps);
         }
         sendEvent(reactContext, RNXMPP_JOINED_ROOMS, roomsResponse);
+    }
+
+    @Override
+    public void onRoomOccupantsReceived(String roomJid, List<String> contactJids) {
+        WritableArray roomsResponse = Arguments.createArray();
+        WritableMap roomNameProps = Arguments.createMap();
+        roomNameProps.putString("roomJid", roomJid);
+        roomsResponse.pushMap(roomNameProps);
+        for (String contactJid : contactJids) {
+            WritableMap roomProps = Arguments.createMap();
+            roomProps.putString("contactJid", contactJid);
+            roomsResponse.pushMap(roomProps);
+        }
+        sendEvent(reactContext, RNXMPP_ROOM_OCCUPANTS, roomsResponse);
     }
 
     @Override

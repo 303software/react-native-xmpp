@@ -15,7 +15,8 @@ var map = {
     'login': 'RNXMPPLogin',
     'roster': 'RNXMPPRoster',
     'hostedRooms': 'RNXMPPHostedRooms',
-    'joinedRooms': 'RNXMPPJoinedRooms'
+    'joinedRooms': 'RNXMPPJoinedRooms',
+    'roomOccupants': 'RNXMPPRoomOccupants'
 }
 
 const LOG = (message) => {
@@ -177,6 +178,10 @@ class XMPP {
 
     getHostedRooms(jid) {
         RNXMPP.getHostedRooms(jid);
+    }
+
+    getRoomOccupants(jid) {
+        RNXMPP.getRoomOccupants(jid);
     }
 
     getJoinedRooms(jid) {

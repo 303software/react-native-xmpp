@@ -36,6 +36,7 @@ import org.jivesoftware.smackx.mam.element.MamElements;
 import org.jivesoftware.smackx.muc.HostedRoom;
 import org.jivesoftware.smackx.muc.MultiUserChat;
 import org.jivesoftware.smackx.muc.MultiUserChatManager;
+import org.jivesoftware.smackx.muc.RoomInfo;
 import org.jivesoftware.smackx.rsm.packet.RSMSet;
 import org.jivesoftware.smackx.xdata.FormField;
 import org.jivesoftware.smackx.xdata.packet.DataForm;
@@ -585,7 +586,6 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
             return e.toString();
         }
         return null;
-
     }
 
     @Override
@@ -663,6 +663,44 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
         catch (Exception e) {
             e.printStackTrace();
             Log.d(TAG,"Exception while fetching joined rooms: "+e.getMessage(),e);
+            return e.toString();
+        }
+        return null;
+    }
+
+    @Override
+    public String getRoomOccupants(String roomJid) {
+        Log.d(TAG, "getRoomInfo called with: "+roomJid);
+        // Get the MultiUserChatManager
+        MultiUserChatManager manager = MultiUserChatManager.getInstanceFor(connection);
+        // Create EntityBareJid.
+        EntityBareJid entityBareJid = null;
+        try {
+            entityBareJid = JidCreate.entityBareFrom(roomJid);
+        } catch (XmppStringprepException e) {
+            e.printStackTrace();
+            Log.d(TAG, "Exception while creating entityBareJid: "+e.getMessage(),e);
+        }
+
+        try {
+            Log.d(TAG, "Getting Room info...");
+            RoomInfo roomInfo = manager.getRoomInfo(entityBareJid);
+            if (roomInfo == null) {
+                Log.d(TAG, "RoomInfo is NULL!");
+            } else {
+                Log.d(TAG, "Getting contact jids...");
+                List<String> contactJids = roomInfo.getContactJids();
+                if (contactJids == null || contactJids.size() == 0) {
+                    Log.d(TAG, "No contact JIDs returned!");
+                }
+                else {
+                    this.xmppServiceListener.onRoomOccupantsReceived(roomJid, contactJids);
+                }
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            Log.d(TAG,"Exception while fetching room info: "+e.getMessage(),e);
             return e.toString();
         }
         return null;

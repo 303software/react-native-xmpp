@@ -24,6 +24,7 @@ public interface XmppServiceListener {
     void onRosterReceived(Roster roster);
     void onHostedRoomsReceived(List<HostedRoom> rooms);
     void onJoinedRoomsReceived(Set<EntityBareJid> rooms);
+    void onRoomOccupantsReceived(String roomJid, List<String> contactJids);
     void onIQ(IQ iq);
     void onArchiveMessage(String message);
     void onPresence(Presence presence) throws XmppStringprepException;

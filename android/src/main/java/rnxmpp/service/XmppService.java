@@ -80,5 +80,8 @@ public interface XmppService {
     String getJoinedRooms(String jid);
 
     @ReactMethod
+    String getRoomOccupants(String roomJid);
+
+    @ReactMethod
     void sendMucMessage(String text, String roomJid);
 }
