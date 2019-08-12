@@ -167,6 +167,10 @@ class XMPP {
         RNXMPP.createInstantRoom(jid,nickname);
     }
 
+    joinOrCreateInstantRoom(jid, nickname) {
+        RNXMPP.joinOrCreateInstantRoom(jid,nickname);
+    }
+
     joinRoom(jid, nickname) {
         RNXMPP.joinRoom(jid,nickname);
     }

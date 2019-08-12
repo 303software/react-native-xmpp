@@ -221,7 +221,7 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
             entityBareJid = JidCreate.entityBareFrom(roomJid);
         } catch (XmppStringprepException e) {
             e.printStackTrace();
-            Log.d(TAG, "Exception while creating entityBareJid: "+e.getMessage());
+            Log.d(TAG, "Exception while creating entityBareJid: "+e.getMessage(),e);
         }
         // Create a MultiUserChat using an XMPPConnection for a room
         MultiUserChat muc = manager.getMultiUserChat(entityBareJid);
@@ -229,10 +229,10 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
             muc.sendMessage(text);
         } catch (SmackException.NotConnectedException e) {
             e.printStackTrace();
-            Log.d(TAG, "NotConnectedException while sending MUC message: "+e.getMessage());
+            Log.d(TAG, "NotConnectedException while sending MUC message: "+e.getMessage(),e);
         } catch (InterruptedException e) {
             e.printStackTrace();
-            Log.d(TAG, "InteruptedException while sending MUC message: "+e.getMessage());
+            Log.d(TAG, "InteruptedException while sending MUC message: "+e.getMessage(),e);
         }
     }
 
@@ -249,9 +249,9 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
             }
             connection.sendStanza(subscribe);
         } catch (Exception e) {
-            Log.d(TAG,"sendSubscribe Exception:"+e.getMessage());
+            Log.d(TAG,"sendSubscribe Exception:"+e.getMessage(),e);
             e.printStackTrace();
-            return e.getMessage();
+            return e.toString();
         }
         return null;
     }
@@ -269,9 +269,9 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
             }
             connection.sendStanza(unsubscribe);
         } catch (Exception e) {
-            Log.d(TAG,"sendUnsubscribe Exception:"+e.getMessage());
+            Log.d(TAG,"sendUnsubscribe Exception:"+e.getMessage(),e);
             e.printStackTrace();
-            return e.getMessage();
+            return e.toString();
         }
         return null;
     }
@@ -289,9 +289,9 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
             }
             connection.sendStanza(subscribed);
         } catch (Exception e) {
-            Log.d(TAG,"sendSubscribed Exception:"+e.getMessage());
+            Log.d(TAG,"sendSubscribed Exception:"+e.getMessage(),e);
             e.printStackTrace();
-            return e.getMessage();
+            return e.toString();
         }
         return null;
     }
@@ -309,9 +309,9 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
             }
             connection.sendStanza(unsubscribed);
         } catch (Exception e) {
-            Log.d(TAG,"sendUnsubscribed Exception:"+e.getMessage());
+            Log.d(TAG,"sendUnsubscribed Exception:"+e.getMessage(),e);
             e.printStackTrace();
-            return e.getMessage();
+            return e.toString();
         }
         return null;
     }
@@ -485,8 +485,9 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
         try {
             roster.createEntry(JidCreate.bareFrom(to),"",null);
         } catch (Exception e) {
+            Log.d(TAG,"createRosterEntry Exception:"+e.getMessage(),e);
             e.printStackTrace();
-            return e.getMessage();
+            return e.toString();
         }
         return null;
     }
@@ -502,8 +503,9 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
             }
             roster.removeEntry(entry);
         } catch (Exception e) {
+            Log.d(TAG,"removeRosterEntry Exception:"+e.getMessage(),e);
             e.printStackTrace();
-            return e.getMessage();
+            return e.toString();
         }
         return null;
     }
@@ -517,18 +519,47 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
             // Get a MultiUserChat using MultiUserChatManager
             MultiUserChat muc = manager.getMultiUserChat(JidCreate.entityBareFrom(jid));
 
+            Log.d(TAG, "CreateInstantRoom - Adding message listener for: " + jid);
+            muc.addMessageListener(this);
+
             // Create the room and send an empty configuration form to make this an instant room.
             Resourcepart nicknameResourcepart = Resourcepart.from(nickname);
             Log.d(TAG,"Making instant room for: "+jid);
-            muc.createOrJoin(nicknameResourcepart).makeInstant();
-
-            Log.d(TAG, "CreateInstantRoom - Adding message listener for: " + jid);
-            muc.addMessageListener(this);
+            muc.create(nicknameResourcepart).makeInstant();
         }
         catch (Exception e) {
             e.printStackTrace();
-            Log.d(TAG,"Exception while creating room: "+e.getMessage());
-            return e.getMessage();
+            Log.d(TAG,"Exception while creating room: "+e.getMessage(),e);
+            return e.toString();
+        }
+        return null;
+    }
+
+    @Override
+    public String joinOrCreateInstantRoom(String jid, String nickname) {
+        Log.d(TAG,"joinOrCreateInstantRoom called with: "+jid+", "+nickname);
+        // Get the MultiUserChatManager
+        MultiUserChatManager manager = MultiUserChatManager.getInstanceFor(connection);
+        try {
+            // Get a MultiUserChat using MultiUserChatManager
+            MultiUserChat muc = manager.getMultiUserChat(JidCreate.entityBareFrom(jid));
+
+            Log.d(TAG, "joinOrCreateInstantRoom - Adding message listener for: " + jid);
+            muc.addMessageListener(this);
+
+            // Create the room and send an empty configuration form to make this an instant room.
+            Resourcepart nicknameResourcepart = Resourcepart.from(nickname);
+            Log.d(TAG,"Calling createOrJoin for: "+nickname+" on jid: "+jid);
+            MultiUserChat.MucCreateConfigFormHandle handle = muc.createOrJoin(nicknameResourcepart);
+            if (handle != null) {
+                Log.d(TAG,"createOrJoin succeeded, calling makeInstant");
+                handle.makeInstant();
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            Log.d(TAG,"Exception in joinOrCreateInstantRoom: "+e.getMessage(),e);
+            return e.toString();
         }
         return null;
     }
@@ -543,14 +574,15 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
             MultiUserChat muc2 = manager.getMultiUserChat(JidCreate.entityBareFrom(jid));
             Log.d(TAG, "joinRoom - Adding message listener for: " + jid);
             muc2.addMessageListener(this);
+
             Resourcepart nicknameResourcepart = Resourcepart.from(nickname);
             Log.d(TAG,"Joining "+jid+" for "+nickname);
             muc2.join(nicknameResourcepart);
         }
         catch (Exception e) {
             e.printStackTrace();
-            Log.d(TAG,"Exception while joining room: "+e.getMessage());
-            return e.getMessage();
+            Log.d(TAG,"Exception while joining room: "+e.getMessage(),e);
+            return e.toString();
         }
         return null;
 
@@ -569,8 +601,8 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
         }
         catch (Exception e) {
             e.printStackTrace();
-            Log.d(TAG,"Exception while joining room: "+e.getMessage());
-            return e.getMessage();
+            Log.d(TAG,"Exception while joining room: "+e.getMessage(),e);
+            return e.toString();
         }
         return null;
     }
@@ -595,8 +627,8 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
         }
         catch (Exception e) {
             e.printStackTrace();
-            Log.d(TAG,"Exception while fetching hosted rooms: "+e.getMessage());
-            return e.getMessage();
+            Log.d(TAG,"Exception while fetching hosted rooms: "+e.getMessage(),e);
+            return e.toString();
         }
         return null;
     }
@@ -621,8 +653,8 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
                     }
                     catch (Exception e) {
                         e.printStackTrace();
-                        Log.d(TAG,"Exception while setting up listeners for existing joined rooms: "+e.getMessage());
-                        return e.getMessage();
+                        Log.d(TAG,"Exception while setting up listeners for existing joined rooms: "+e.getMessage(),e);
+                        return e.toString();
                     }
                 }
             }
@@ -630,8 +662,8 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
         }
         catch (Exception e) {
             e.printStackTrace();
-            Log.d(TAG,"Exception while fetching joined rooms: "+e.getMessage());
-            return e.getMessage();
+            Log.d(TAG,"Exception while fetching joined rooms: "+e.getMessage(),e);
+            return e.toString();
         }
         return null;
     }
