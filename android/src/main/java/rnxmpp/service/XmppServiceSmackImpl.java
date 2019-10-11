@@ -155,7 +155,7 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
                 confBuilder.setHostAddress(hostAddr);
             } catch (IllegalArgumentException e) {
                 Log.e(TAG,"Exception while connecting!", e);
-                throw e;
+                this.xmppServiceListener.onError(e);
             }
         }
         if (port != null){
