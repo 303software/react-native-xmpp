@@ -17,7 +17,7 @@ public interface XmppService {
     public void trustHosts(ReadableArray trustedHosts);
 
     @ReactMethod
-    void connect(String jid, String password, String authMethod, String hostname, Integer port) throws XmppStringprepException;
+    void connect(String jid, String password, String authMethod, String hostname, Integer port) throws XmppStringprepException, IllegalArgumentException;
 
     @ReactMethod
     void message(String text, String to, String thread) throws XmppStringprepException, InterruptedException, SmackException.NotConnectedException;

@@ -127,7 +127,7 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
     }
 
     @Override
-    public void connect(final String jid, String password, String authMethod, String hostname, Integer port) throws XmppStringprepException {
+    public void connect(final String jid, String password, String authMethod, String hostname, Integer port) throws XmppStringprepException, IllegalArgumentException {
         final String[] jidParts = jid.split("@");
         String[] serviceNameParts = jidParts[1].split("/");
         String serviceName = serviceNameParts[0];

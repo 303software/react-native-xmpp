@@ -41,7 +41,7 @@ public class RNXMPPModule extends ReactContextBaseJavaModule implements rnxmpp.s
 
     @Override
     @ReactMethod
-    public void connect(String jid, String password, String authMethod, String hostname, Integer port) throws XmppStringprepException {
+    public void connect(String jid, String password, String authMethod, String hostname, Integer port) throws XmppStringprepException, IllegalArgumentException {
 
         this.xmppService.connect(jid, password, authMethod, hostname, port);
     }
