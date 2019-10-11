@@ -150,8 +150,13 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
             confBuilder.setResource(Long.toHexString(Double.doubleToLongBits(Math.random())));
         }
         if (hostname != null){
-            InetAddress hostAddr = InetAddressUtil.ipv4From(hostname);
-            confBuilder.setHostAddress(hostAddr);
+            try {
+                InetAddress hostAddr = InetAddressUtil.ipv4From(hostname);
+                confBuilder.setHostAddress(hostAddr);
+            } catch (IllegalArgumentException e) {
+                Log.e(TAG,"Exception while connecting!", e);
+                throw e;
+            }
         }
         if (port != null){
             confBuilder.setPort(port);
