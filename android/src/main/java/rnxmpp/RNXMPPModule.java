@@ -145,6 +145,12 @@ public class RNXMPPModule extends ReactContextBaseJavaModule implements rnxmpp.s
 
     @Override
     @ReactMethod
+    public String destroyRoom(String jid, String reason) {
+        return this.xmppService.destroyRoom(jid, reason);
+    }
+
+    @Override
+    @ReactMethod
     public String getHostedRooms(String jid) {
         return this.xmppService.getHostedRooms(jid);
     }

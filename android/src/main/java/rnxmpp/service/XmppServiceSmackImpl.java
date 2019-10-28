@@ -542,6 +542,25 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
     }
 
     @Override
+    public String destroyRoom(String jid, String reason) {
+        Log.d(TAG,"destroyRoom called with: "+jid+", "+reason);
+        // Get the MultiUserChatManager
+        MultiUserChatManager manager = MultiUserChatManager.getInstanceFor(connection);
+        try {
+            // Get a MultiUserChat using MultiUserChatManager
+            MultiUserChat muc = manager.getMultiUserChat(JidCreate.entityBareFrom(jid));
+            muc.destroy(reason,null);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            Log.d(TAG,"Exception in destroyRoom: "+e.getMessage(),e);
+            this.xmppServiceListener.onError(e);
+            return e.toString();
+        }
+        return null;
+    }
+
+    @Override
     public String joinOrCreateInstantRoom(String jid, String nickname) {
         Log.d(TAG,"joinOrCreateInstantRoom called with: "+jid+", "+nickname);
         // Get the MultiUserChatManager

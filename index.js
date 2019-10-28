@@ -210,6 +210,10 @@ class XMPP {
     RNXMPP.getHostedRooms(jid);
   }
 
+   destroyRoom(jid, reason) {
+    RNXMPP.destroyRoom(jid, reason)
+   }
+
   getRoomOccupants(jid) {
     RNXMPP.getRoomOccupants(jid);
   }

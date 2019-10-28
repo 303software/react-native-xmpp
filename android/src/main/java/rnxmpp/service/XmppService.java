@@ -65,6 +65,9 @@ public interface XmppService {
     String createInstantRoom(String jid, String roomNickname);
 
     @ReactMethod
+    String destroyRoom(String jid, String reason);
+
+    @ReactMethod
     String joinOrCreateInstantRoom(String jid, String roomNickname);
 
     @ReactMethod
