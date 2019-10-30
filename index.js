@@ -150,6 +150,10 @@ class XMPP {
     );
   }
 
+  connect(password, username, serviceName) {
+    React.NativeModules.RNXMPP.genericConnect(password,username,serviceName);
+  }
+
   message(text, user, thread = null) {
     React.NativeModules.RNXMPP.message(text, user, thread);
   }

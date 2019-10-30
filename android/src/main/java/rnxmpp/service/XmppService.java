@@ -17,6 +17,9 @@ public interface XmppService {
     public void trustHosts(ReadableArray trustedHosts);
 
     @ReactMethod
+    void genericConnect(String password, String username, String serviceName) throws XmppStringprepException, IllegalArgumentException;
+
+    @ReactMethod
     void connect(String jid, String password, String authMethod, String hostname, Integer port) throws XmppStringprepException, IllegalArgumentException;
 
     @ReactMethod

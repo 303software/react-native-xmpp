@@ -201,6 +201,42 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
     }
 
     @Override
+    public void genericConnect(final String password, final String username, final String serviceName) throws XmppStringprepException, IllegalArgumentException {
+        connection = new XMPPTCPConnection(password,username,serviceName);
+
+        connection.addAsyncStanzaListener(this, new OrFilter(new StanzaTypeFilter(IQ.class), new StanzaTypeFilter(Presence.class)));
+        connection.addConnectionListener(this);
+
+        ChatManager.getInstanceFor(connection).addChatListener(this);
+        roster = Roster.getInstanceFor(connection);
+        roster.addRosterLoadedListener(this);
+
+        new AsyncTask<Void, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                try {
+                    connection.connect().login();
+                } catch (XMPPException | SmackException | IOException e) {
+                    if (e instanceof SASLErrorException){
+                        XmppServiceSmackImpl.this.xmppServiceListener.onLoginError(((SASLErrorException) e).getSASLFailure().toString());
+                    }else{
+                        XmppServiceSmackImpl.this.xmppServiceListener.onError(e);
+                    }
+
+                } catch (InterruptedException e) {
+                    XmppServiceSmackImpl.this.xmppServiceListener.onError(e);
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void dummy) {
+            }
+        }.execute();
+    }
+
+    @Override
     public void message(String text, String to, String thread) throws XmppStringprepException, InterruptedException, SmackException.NotConnectedException {
         String chatIdentifier = (thread == null ? to : thread);
 
