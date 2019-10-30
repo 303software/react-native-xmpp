@@ -202,7 +202,9 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
 
     @Override
     public void genericConnect(final String password, final String username, final String serviceName) throws XmppStringprepException, IllegalArgumentException {
-        connection = new XMPPTCPConnection(password,username,serviceName);
+        XMPPTCPConnectionConfiguration config = XMPPTCPConnectionConfiguration.builder().setUsernameAndPassword(username, password).setXmppDomain(
+                JidCreate.domainBareFrom(serviceName)).setKeystoreType(null).build();
+        connection = new XMPPTCPConnection(config);
 
         connection.addAsyncStanzaListener(this, new OrFilter(new StanzaTypeFilter(IQ.class), new StanzaTypeFilter(Presence.class)));
         connection.addConnectionListener(this);
