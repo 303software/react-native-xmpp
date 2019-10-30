@@ -150,6 +150,23 @@ class XMPP {
     );
   }
 
+  connect(
+    username,
+    password,
+    auth = RNXMPP.SCRAMSHA1,
+    hostname = null,
+    port = 5222
+  ) {
+    React.NativeModules.RNXMPP.connect(
+      username,
+      password,
+      auth,
+      hostname,
+      port
+    );
+  }
+
+
   genericConnect(password, username, serviceName) {
     React.NativeModules.RNXMPP.genericConnect(password,username,serviceName);
   }
