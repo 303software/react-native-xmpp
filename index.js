@@ -138,9 +138,6 @@ class XMPP {
     hostname = null,
     port = 5222
   ) {
-    if (!hostname) {
-      hostname = (username + "@/").split("@")[1].split("/")[0];
-    }
     React.NativeModules.RNXMPP.connect(
       username,
       password,
@@ -149,26 +146,9 @@ class XMPP {
       port
     );
   }
-
-  connect(
-    username,
-    password,
-    auth = RNXMPP.SCRAMSHA1,
-    hostname = null,
-    port = 5222
-  ) {
-    React.NativeModules.RNXMPP.connect(
-      username,
-      password,
-      auth,
-      hostname,
-      port
-    );
-  }
-
 
   genericConnect(password, username, serviceName) {
-    React.NativeModules.RNXMPP.genericConnect(password,username,serviceName);
+    React.NativeModules.RNXMPP.genericConnect(password, username, serviceName);
   }
 
   message(text, user, thread = null) {
@@ -231,9 +211,9 @@ class XMPP {
     RNXMPP.getHostedRooms(jid);
   }
 
-   destroyRoom(jid, reason) {
-    RNXMPP.destroyRoom(jid, reason)
-   }
+  destroyRoom(jid, reason) {
+    RNXMPP.destroyRoom(jid, reason);
+  }
 
   getRoomOccupants(jid) {
     RNXMPP.getRoomOccupants(jid);
