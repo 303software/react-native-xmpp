@@ -150,7 +150,7 @@ class XMPP {
     );
   }
 
-  connect(password, username, serviceName) {
+  genericConnect(password, username, serviceName) {
     React.NativeModules.RNXMPP.genericConnect(password,username,serviceName);
   }
 
