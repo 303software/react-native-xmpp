@@ -54,6 +54,9 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLSession;
+
 import de.measite.minidns.util.InetAddressUtil;
 import rnxmpp.ssl.UnsafeSSLContext;
 
@@ -202,8 +205,18 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
 
     @Override
     public void genericConnect(final String password, final String username, final String serviceName) throws XmppStringprepException, IllegalArgumentException {
-        XMPPTCPConnectionConfiguration config = XMPPTCPConnectionConfiguration.builder().setUsernameAndPassword(username, password).setXmppDomain(
-                JidCreate.domainBareFrom(serviceName)).setKeystoreType(null).build();
+        XMPPTCPConnectionConfiguration config = XMPPTCPConnectionConfiguration.builder()
+                .setUsernameAndPassword(username, password)
+                .setXmppDomain(JidCreate.domainBareFrom(serviceName))
+                .setDnssecMode(ConnectionConfiguration.DnssecMode.disabled)
+                .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled)
+                .setHostnameVerifier(new HostnameVerifier() {
+                    @Override
+                    public boolean verify(String hostname, SSLSession session) {
+                        return true;
+                    }
+                })
+                .setKeystoreType(null).build();
         connection = new XMPPTCPConnection(config);
 
         connection.addAsyncStanzaListener(this, new OrFilter(new StanzaTypeFilter(IQ.class), new StanzaTypeFilter(Presence.class)));
