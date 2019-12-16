@@ -144,6 +144,12 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
                 .setUsernameAndPassword(jidParts[0], password)
                 .setConnectTimeout(30000)
                 // .setDebuggerEnabled(true)
+                .setHostnameVerifier(new HostnameVerifier() {
+                    @Override
+                    public boolean verify(String hostname, SSLSession session) {
+                        return true;
+                    }
+                })
                 .setKeystoreType(null)
                 .setSecurityMode(ConnectionConfiguration.SecurityMode.ifpossible);
 
